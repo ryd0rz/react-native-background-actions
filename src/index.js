@@ -1,6 +1,7 @@
 import { Platform, AppRegistry } from 'react-native';
 import { RNBackgroundActions, nativeEventEmitter } from './RNBackgroundActionsModule';
 import EventEmitter from 'eventemitter3';
+let STARTED = false;
 
 /**
  * @typedef {{taskName: string,
@@ -82,7 +83,8 @@ class BackgroundServer extends EventEmitter {
      * @returns {Promise<void>}
      */
     async start(task, options) {
-        if (!this._isRunning) {
+        if (!STARTED) {
+            STARTED = true;
             this._runnedTasks++;
             this._currentOptions = this._normalizeOptions(options);
             const finalTask = this._generateTask(task, options.parameters);
@@ -138,6 +140,7 @@ class BackgroundServer extends EventEmitter {
     async stop() {
         this._stopTask();
         await RNBackgroundActions.stop();
+        STARTED = false;
         this._isRunning = false;
     }
 }
