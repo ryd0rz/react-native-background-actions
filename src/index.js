@@ -14,7 +14,14 @@ import EventEmitter from 'eventemitter3';
  * @extends EventEmitter<'expiration',any>
  */
 class BackgroundServer extends EventEmitter {
+
+    static instance = null;
+
     constructor() {
+
+        if (BackgroundServer.instance) {
+          return BackgroundServer.instance; // Return the already created instance
+        }
         super();
         /** @private */
         this._runnedTasks = 0;
